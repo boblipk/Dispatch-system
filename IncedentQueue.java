@@ -1,9 +1,9 @@
-import java.util.LinkedList;
-import java.util.Queue;
 public class IncedentQueue {
-    private Queue<Incedent> queue;
+    private Incedent head;
+    private Incedent tail;
 
     public IncedentQueue() {
-        this.queue = new LinkedList<Incedent>();
-    }    
+        this.head = null;
+        this.tail = null;
+    }
 }
