@@ -1,7 +1,14 @@
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 public class main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Set<String> yesterdayTypes = new HashSet<>();
+
+        yesterdayTypes.add("Fire");
+        yesterdayTypes.add("Medical");
+        yesterdayTypes.add("Traffic");
 
         IncidentQueue queue = new IncidentQueue(scanner);
 
@@ -35,7 +42,7 @@ public class main {
                 case 4 -> queue.displayIncTypesToday();
                 case 5 -> queue.searchIncidents(true);
                 case 6 -> queue.searchIncidents(false);
-                case 7 -> System.out.println("Performing trend analysis of Incident types..."); // Code for trend analysis of Incident types
+                case 7 -> queue.trendAnalysis(yesterdayTypes);
                 case 8 -> {
                     System.out.println("Exiting the program. Goodbye!");
                     System.exit(0);

@@ -7,7 +7,7 @@ public class IncidentQueue {
     private Incident head;
     private Incident tail;
     private Scanner scanner;
-    private Set<String> uniqueIncidentsToday;
+    private Set<String> todayTypes;
 
     private String tableLine(String pos, String type, String district, String priority) {
         int chunklen = 4;
@@ -32,7 +32,7 @@ public class IncidentQueue {
         this.head = null;
         this.tail = null;
         this.scanner = scanner;
-        this.uniqueIncidentsToday = new HashSet<>();
+        this.todayTypes = new HashSet<>();
     }
     public void addIncident() {
 
@@ -49,7 +49,7 @@ public class IncidentQueue {
         scanner.nextLine(); // Consume the newline character
         
         Incident newIncident = new Incident(incType, incDistrict, isHighPriority);
-        uniqueIncidentsToday.add(incType);
+        todayTypes.add(incType);
     
         if (head == null) {
             head = newIncident;
@@ -110,10 +110,10 @@ public class IncidentQueue {
     }
 
     public void displayIncTypesToday() {
-        if (uniqueIncidentsToday.isEmpty()) {
+        if (todayTypes.isEmpty()) {
             System.out.println("No Incidents have been added today.");
         } else {
-            System.out.println("Unique Incident types today: " + uniqueIncidentsToday);
+            System.out.println("Unique Incident types today: " + todayTypes);
         }
     }
 
@@ -144,6 +144,18 @@ public class IncidentQueue {
         if (!found) {
             System.out.println("No Incidents found whith the " + (byType ? "type" : "district") + " '" + searchTerm + "'.");
         }
+    }
+
+    public void trendAnalysis(Set<String> compareTypes) {
+        Set<String> dummyType = new HashSet<>(todayTypes);
+        dummyType.addAll(compareTypes);
+        System.out.println("Types that have occured across today and yesterday: " + dummyType);
+        dummyType = new HashSet<>(todayTypes);
+        dummyType.retainAll(compareTypes);
+        System.out.println("Types that have occured across both today and yesterday: " + dummyType);
+        dummyType = new HashSet<>(todayTypes);
+        dummyType.removeAll(compareTypes);
+        System.out.println("Types that have occured today but not yesterday: " + dummyType);
     }
 }
         
