@@ -1,9 +1,9 @@
 
 import java.util.Scanner;
 
-public class IncedentQueue {
-    private Incedent head;
-    private Incedent tail;
+public class IncidentQueue {
+    private Incident head;
+    private Incident tail;
     private Scanner scanner;
 
     private String tableLine(String pos, String type, String district, String priority) {
@@ -25,18 +25,18 @@ public class IncedentQueue {
         return line.toString();
     }
 
-    public IncedentQueue(Scanner scanner) {
+    public IncidentQueue(Scanner scanner) {
         this.head = null;
         this.tail = null;
         this.scanner = scanner;
     }
-    public void addIncedent() {
+    public void addIncident() {
 
-        System.out.println("Enter an incident type ");
+        System.out.println("Enter an Incident type ");
         String incType = scanner.nextLine();
-        System.out.println("Enter an incident district ");
+        System.out.println("Enter an Incident district ");
         String incDistrict = scanner.nextLine();
-        System.out.println("Is this a high priority incident? (true/false) ");
+        System.out.println("Is this a high priority Incident? (true/false) ");
         while (!scanner.hasNextBoolean()) {
             System.out.println("Please enter 'true' or 'false' for high priority: ");
             scanner.next(); // Consume the invalid input
@@ -44,27 +44,56 @@ public class IncedentQueue {
         boolean isHighPriority = scanner.nextBoolean();
         scanner.nextLine(); // Consume the newline character
         
-        Incedent newIncedent = new Incedent(incType, incDistrict, isHighPriority);
+        Incident newIncident = new Incident(incType, incDistrict, isHighPriority);
     
         if (head == null) {
-            head = newIncedent;
-            tail = newIncedent;
-        } else if (newIncedent.getPriority()) {
-            newIncedent.newNext(head);
-            head = newIncedent;
+            head = newIncident;
+            tail = newIncident;
+        } else if (newIncident.getPriority()) {
+            newIncident.newNext(head);
+            head = newIncident;
         } else {
-            tail.newNext(newIncedent);
-            tail = newIncedent;
+            tail.newNext(newIncident);
+            tail = newIncident;
         }
-    
     }
 
-    public void displayIncedents() {
+    public void  proccessIncident() {
+        if (head == null) {
+            System.out.println("Incident queue is empty.");
+        }
+        else {
+            System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┐");
+            System.out.println(tableLine("Pos", "Type", "District", "Priority"));
+            System.out.println("├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤");
+            String dispPrio = head.getPriority() ? "High" : "Low";
+            System.out.println(tableLine("1", head.getIncType(), head.getIncDistrict(), dispPrio));
+            System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┘");
+            System.out.println("do you want to process this incident? (y/n) ");
+            String response = scanner.nextLine();
+            if (response.equalsIgnoreCase("y")) {
+                head = head.getNext();
+                if (head == null) {
+                    tail = null;
+                }
+                System.out.println("Incident processed.");
+            } else if (response.equalsIgnoreCase("n")) {
+                System.out.println("Incident not processed.");
+            } else {
+                System.out.println("Invalid response. Please enter 'y' or 'n'.");
+            }   
+        }
+        
+    }
+
+
+
+    public void displayIncidents() {
         System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┐");
         String between = "├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤";
         System.out.println(tableLine("Pos", "Type", "District", "Priority"));
         int linepos = 1;
-        Incedent current = head;
+        Incident current = head;
         while (current != null) {
             System.out.println(between);
             String dispPrio = current.getPriority() ? "High" : "Low";

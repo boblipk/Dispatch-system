@@ -1,18 +1,18 @@
-public class Incedent {
+public class Incident {
     private String IncType;
     private String IncDistrict;
     private boolean isHighPriority;
-    private Incedent next;
+    private Incident next;
 
-    public Incedent(String IncType, String IncDistrict, boolean isHighPriority) {
+    public Incident(String IncType, String IncDistrict, boolean isHighPriority) {
         this.IncType = IncType;
         this.IncDistrict = IncDistrict;
         this.isHighPriority = isHighPriority;
         this.next = null;
     }
 
-    public void newNext(Incedent newIncedent) {
-        this.next = newIncedent;
+    public void newNext(Incident newIncident) {
+        this.next = newIncident;
     }
 
     public boolean getPriority() {
@@ -27,7 +27,7 @@ public class Incedent {
         return IncDistrict;
     }
 
-    public Incedent getNext() {
+    public Incident getNext() {
         return next;
     }
 
