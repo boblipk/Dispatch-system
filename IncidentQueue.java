@@ -1,4 +1,6 @@
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -8,12 +10,15 @@ public class IncidentQueue {
     private Incident tail;
     private Scanner scanner;
     private Set<String> todayTypes;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private String tableLine(String pos, String type, String district, String priority) {
-        int chunklen = 4;
-        String[] data = {pos, type, district, priority};
+    private String tableLine(String pos, String type, String district, String priority, String timestamp, String id) {
+        int[] chunklenths = {4, 30, 30, 30, 10, 36,};
+        String[] data = {pos, type, district, priority, timestamp, id};
         StringBuilder line = new StringBuilder("│");
-        for (String datum : data) {
+        for (int i = 0; i < data.length; i++) {
+            String datum = data[i];
+            int chunklen = chunklenths[i];
             if (datum.length() > (chunklen)) {
                 datum = datum.substring(0, chunklen - 3) + "...";
             } else {
@@ -23,7 +28,6 @@ public class IncidentQueue {
                 datum = " ".repeat(leftPadding) + datum + " ".repeat(rightPadding);
             }
             line.append(datum).append("│");
-            chunklen = 30; // Set chunklen to 30 for the remaining columns
         }
         return line.toString();
     }
@@ -68,12 +72,13 @@ public class IncidentQueue {
             System.out.println("Incident queue is empty.");
         }
         else {
-            System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┐");
-            System.out.println(tableLine("Pos", "Type", "District", "Priority"));
-            System.out.println("├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤");
+            System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┬──────────┬────────────────────────────────────┐");
+            System.out.println(tableLine("Pos", "Type", "District", "Priority", "Time", "ID"));
+            System.out.println("├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┼──────────┼────────────────────────────────────┤");
             String dispPrio = head.getPriority() ? "High" : "Low";
-            System.out.println(tableLine("1", head.getIncType(), head.getIncDistrict(), dispPrio));
-            System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┘");
+            String timestamp = head.getTimestamp().atZone(ZoneId.systemDefault()).format(formatter);
+            System.out.println(tableLine("1", head.getIncType(), head.getIncDistrict(), dispPrio, timestamp, head.getId().toString()));
+            System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┴──────────┴────────────────────────────────────┘");
             System.out.println("do you want to process this incident? (y/n) ");
             String response = scanner.nextLine();
             if (response.equalsIgnoreCase("y")) {
@@ -94,19 +99,20 @@ public class IncidentQueue {
 
 
     public void displayIncidents() {
-        System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┐");
-        String between = "├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤";
-        System.out.println(tableLine("Pos", "Type", "District", "Priority"));
+        System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┬──────────┬────────────────────────────────────┐");
+        String between = "├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┼──────────┼────────────────────────────────────┤";
+        System.out.println(tableLine("Pos", "Type", "District", "Priority", "Time", "ID"));
         int linepos = 1;
         Incident current = head;
         while (current != null) {
             System.out.println(between);
             String dispPrio = current.getPriority() ? "High" : "Low";
-            System.out.println(tableLine(Integer.toString(linepos), current.getIncType(), current.getIncDistrict(), dispPrio));
+            String time = current.getTimestamp().atZone(ZoneId.systemDefault()).format(formatter);
+            System.out.println(tableLine(Integer.toString(linepos), current.getIncType(), current.getIncDistrict(), dispPrio, time, current.getId().toString()));
             current = current.getNext();
             linepos++;
         }
-        System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┘");
+        System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┴──────────┴────────────────────────────────────┘");
     }
 
     public void displayIncTypesToday() {
@@ -123,9 +129,9 @@ public class IncidentQueue {
         Incident current = head;
         boolean found = false;
         
-        System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┐");
-        String between = "├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤";
-        System.out.println(tableLine("Pos", "Type", "District", "Priority"));
+        System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┬──────────┬────────────────────────────────────┐");
+        String between = "├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┼──────────┼────────────────────────────────────┤";
+        System.out.println(tableLine("Pos", "Type", "District", "Priority", "Time", "ID"));
         int linepos = 1;
 
 
@@ -134,15 +140,16 @@ public class IncidentQueue {
             if (fieldToCheck.equalsIgnoreCase(searchTerm)) {
                 found = true;
                 String dispPrio = current.getPriority() ? "High" : "Low";
+                String time = current.getTimestamp().atZone(ZoneId.systemDefault()).format(formatter);
                 System.out.println(between);
-                System.out.println(tableLine(Integer.toString(linepos), current.getIncType(), current.getIncDistrict(), dispPrio));
+                System.out.println(tableLine(Integer.toString(linepos), current.getIncType(), current.getIncDistrict(), dispPrio, time, current.getId().toString()));
             }
             current = current.getNext();
             linepos++;
         }
-        System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┘");
+        System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┴──────────┴────────────────────────────────────┘");
         if (!found) {
-            System.out.println("No Incidents found whith the " + (byType ? "type" : "district") + " '" + searchTerm + "'.");
+            System.out.println("No Incidents found with the " + (byType ? "type" : "district") + " '" + searchTerm + "'.");
         }
     }
 
