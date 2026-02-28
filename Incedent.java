@@ -19,5 +19,17 @@ public class Incedent {
         return isHighPriority;
     }
 
+    public String getIncType() {
+        return IncType;
+    }
+
+    public String getIncDistrict() {
+        return IncDistrict;
+    }
+
+    public Incedent getNext() {
+        return next;
+    }
+
     
 }

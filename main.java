@@ -32,7 +32,7 @@ public class main {
             if (option == 1) {
                 queue.addIncedent();
             } else if (option == 2) {
-                System.out.println("Viewing all incidents..."); // Code to view all incidents
+                queue.displayIncedents();
             } else if (option == 3) {
                 System.out.println("Processing next incident..."); // Code to process next incident
             } else if (option == 4) {
