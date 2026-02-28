@@ -1,10 +1,13 @@
 
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class IncidentQueue {
     private Incident head;
     private Incident tail;
     private Scanner scanner;
+    private Set<String> uniqueIncidentsToday;
 
     private String tableLine(String pos, String type, String district, String priority) {
         int chunklen = 4;
@@ -29,6 +32,7 @@ public class IncidentQueue {
         this.head = null;
         this.tail = null;
         this.scanner = scanner;
+        this.uniqueIncidentsToday = new HashSet<>();
     }
     public void addIncident() {
 
@@ -45,6 +49,7 @@ public class IncidentQueue {
         scanner.nextLine(); // Consume the newline character
         
         Incident newIncident = new Incident(incType, incDistrict, isHighPriority);
+        uniqueIncidentsToday.add(incType);
     
         if (head == null) {
             head = newIncident;
@@ -102,8 +107,14 @@ public class IncidentQueue {
             linepos++;
         }
         System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┘");
+    }
 
-
+    public void displayIncTypesToday() {
+        if (uniqueIncidentsToday.isEmpty()) {
+            System.out.println("No Incidents have been added today.");
+        } else {
+            System.out.println("Unique Incident types today: " + uniqueIncidentsToday);
+        }
     }
 }
         

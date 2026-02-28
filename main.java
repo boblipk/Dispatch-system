@@ -11,7 +11,7 @@ public class main {
             System.out.println("1: Add an Incident");
             System.out.println("2: view all Incidents");
             System.out.println("3: process next Incident");
-            System.out.println("4: veiw details of unique Incident types today");
+            System.out.println("4: view details of unique Incident types today");
             System.out.println("5: search for an Incident");
             System.out.println("6: trend analysis of Incident types");
             System.out.println("7: exit");
@@ -32,7 +32,7 @@ public class main {
                 case 1 -> queue.addIncident();
                 case 2 -> queue.displayIncidents();
                 case 3 -> queue.proccessIncident();
-                case 4 -> System.out.println("Viewing details of unique Incident types today..."); // Code to view details of unique Incident types today
+                case 4 -> queue.displayIncTypesToday();
                 case 5 -> System.out.println("Searching for an Incident..."); // Code to search for an Incident
                 case 6 -> System.out.println("Performing trend analysis of Incident types..."); // Code for trend analysis of Incident types
                 case 7 -> {
