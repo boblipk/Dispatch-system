@@ -116,5 +116,34 @@ public class IncidentQueue {
             System.out.println("Unique Incident types today: " + uniqueIncidentsToday);
         }
     }
+
+    public void searchIncidents(boolean byType) {
+        System.out.println("Enter the " + (byType ? "type" : "district") + " to search for: ");
+        String searchTerm = scanner.nextLine().trim();
+        Incident current = head;
+        boolean found = false;
+        
+        System.out.println("┌────┬──────────────────────────────┬──────────────────────────────┬──────────────────────────────┐");
+        String between = "├────┼──────────────────────────────┼──────────────────────────────┼──────────────────────────────┤";
+        System.out.println(tableLine("Pos", "Type", "District", "Priority"));
+        int linepos = 1;
+
+
+        while (current != null) {
+            String fieldToCheck = byType ? current.getIncType() : current.getIncDistrict();
+            if (fieldToCheck.equalsIgnoreCase(searchTerm)) {
+                found = true;
+                String dispPrio = current.getPriority() ? "High" : "Low";
+                System.out.println(between);
+                System.out.println(tableLine(Integer.toString(linepos), current.getIncType(), current.getIncDistrict(), dispPrio));
+            }
+            current = current.getNext();
+            linepos++;
+        }
+        System.out.println("└────┴──────────────────────────────┴──────────────────────────────┴──────────────────────────────┘");
+        if (!found) {
+            System.out.println("No Incidents found whith the " + (byType ? "type" : "district") + " '" + searchTerm + "'.");
+        }
+    }
 }
         
